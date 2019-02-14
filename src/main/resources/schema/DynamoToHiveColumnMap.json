@@ -1,0 +1,18 @@
+[
+  {
+    "dynamoColumnType": "$.s",
+    "hiveColumnType": "STRING"
+  },
+  {
+    "dynamoColumnType": "$.n",
+    "hiveColumnType": "INT"
+  },
+  {
+    "dynamoColumnType": "$.bOOL",
+    "hiveColumnType": "BOOLEAN"
+  },
+  {
+    "dynamoColumnType": "$.m",
+    "hiveColumnType": "MAP"
+  }
+]

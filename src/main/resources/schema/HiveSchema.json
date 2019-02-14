@@ -1,0 +1,188 @@
+{
+  "title": "HiveTableCreationSchema",
+  "type": "object",
+  "required": [
+    "tableName",
+    "tableType",
+    "tableComment",
+    "tableStorageType",
+    "scalarColumns"
+  ],
+  "optionally": [
+    "partitions",
+    "complexArrayColumns",
+    "complexStructColumns",
+    "complexMapColumns"
+  ],
+  "properties": {
+    "tableName": {
+      "description": "Name of the table",
+      "type": "string"
+    },
+    "tableType": {
+      "description": "Type of the table",
+      "type": "string",
+      "enum": [
+        "INTERNAL",
+        "EXTERNAL"
+      ],
+      "default": "EXTERNAL"
+    },
+    "tableComment": {
+      "description": "Table comments",
+      "type": "string"
+    },
+    "tableStorageType": {
+      "description": "Table storage type supported by Hive",
+      "type": "string",
+      "enum": [
+        "PARQUET",
+        "JSON"
+      ],
+      "default": "PARQUET"
+    },
+    "partitions": {
+      "type": "array",
+      "required": [
+        "columnName",
+        "columnType",
+        "columnComment"
+      ],
+      "items": {
+        "type": "object",
+        "properties": {
+          "columnName": {
+            "description": "Name of the column",
+            "type": "string"
+          },
+          "columnType": {
+            "description": "Type of the column",
+            "type": "string",
+            "default": "STRING"
+          },
+          "columnComment": {
+            "description": "Comment for the column",
+            "type": "string"
+          }
+        }
+      }
+    },
+    "scalarColumns": {
+      "description": "Table columns",
+      "type": "array",
+      "required": [
+        "columnName",
+        "columnType",
+        "columnComment"
+      ],
+      "items": {
+        "type": "object",
+        "properties": {
+          "columnName": {
+            "description": "Name of the column",
+            "type": "string"
+          },
+          "columnType": {
+            "description": "Type of the column",
+            "type": "string",
+            "default": "STRING"
+          },
+          "columnComment": {
+            "description": "Comment for the column",
+            "type": "string"
+          }
+        }
+      }
+    },
+    "complexArrayColumns": {
+      "description": "Table columns of type ARRAY",
+      "type": "array",
+      "required": [
+        "columnName",
+        "columnType",
+        "columnComment"
+      ],
+      "items": {
+        "type": "object",
+        "properties": {
+          "columnName": {
+            "description": "Name of the column",
+            "type": "string"
+          },
+          "columnType": {
+            "description": "Type of the column",
+            "type": "string",
+            "default": "ARRAY"
+          },
+          "columnComment": {
+            "description": "Comment for the column",
+            "type": "string"
+          }
+        }
+      }
+    },
+    "complexStructColumns": {
+      "description": "Table columns of type STRUCT",
+      "type": "array",
+      "required": [
+        "columnName",
+        "columnType",
+        "columnComment"
+      ],
+      "items": {
+        "type": "object",
+        "properties": {
+          "columnName": {
+            "description": "Name of the column",
+            "type": "string"
+          },
+          "columnType": {
+            "description": "Type of the column",
+            "type": "string",
+            "default": "STRING"
+          },
+          "columnComment": {
+            "description": "Comment for the column",
+            "type": "string"
+          }
+        }
+      }
+    },
+    "complexMapColumns": {
+      "description": "Table columns of type MAP",
+      "type": "array",
+      "required": [
+        "columnName",
+        "columnType",
+        "columnComment"
+      ],
+      "items": {
+        "type": "object",
+        "properties": {
+          "columnName": {
+            "description": "Name of the column",
+            "type": "string"
+          },
+          "columnType": {
+            "description": "Type of the column",
+            "type": "object",
+            "properties": {
+              "keyType": {
+                "description": "Key type",
+                "type": "string"
+              },
+              "keyValue": {
+                "description": "Value type",
+                "type": "string"
+              }
+            }
+          },
+          "columnComment": {
+            "description": "Comment for the column",
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

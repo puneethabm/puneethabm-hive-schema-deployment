@@ -1,0 +1,494 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.puneethabm</groupId>
+    <artifactId>puneethabm-hive-schema-deployment</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+
+    <!-- WARNING -->
+    <!-- Spark and scala versions are important, DON'T change scala version from 2.11.8 to 2.12, code will break! -->
+    <properties>
+        <!-- General -->
+        <encoding>UTF-8</encoding>
+        <scope.var>compile</scope.var>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.plugin.version>2.3</maven.plugin.version>
+
+        <!-- Logging -->
+        <slf4j.version>1.7.5</slf4j.version>
+        <log4j.scala.version>11.0</log4j.scala.version>
+        <!--<typesafe.slf4j.log.version>2.1.2</typesafe.slf4j.log.version>-->
+
+        <!-- Scala related -->
+        <scala.maven.plugin.version>3.1.6</scala.maven.plugin.version>
+        <scala.version>2.11.8</scala.version>
+        <scala.compat.version>2.11</scala.compat.version>
+        <typesafe.version>1.3.2</typesafe.version>
+
+        <!-- Utilities -->
+        <utils.codehaus.janino.version>3.0.8</utils.codehaus.janino.version>
+        <utils.joda.time.version>2.10</utils.joda.time.version>
+        <utils.commons-codec.version>1.11</utils.commons-codec.version>
+        <utils.codehaus.jackson.version>1.9.13</utils.codehaus.jackson.version>
+        <utils.commons.pool.version>1.6</utils.commons.pool.version>
+        <play.json.version>2.7.1</play.json.version>
+        <jackson.module.version>2.6.5</jackson.module.version>
+
+        <!-- Mysql -->
+        <mysql.connector.version>8.0.13</mysql.connector.version>
+
+        <!-- Hadoop related -->
+        <spark.version>2.3.1</spark.version>
+        <spark.hive.version>1.2.1.spark2</spark.hive.version>
+        <hive.jdbc.version>3.1.1</hive.jdbc.version>
+
+        <!-- Twitter -->
+        <twitter.version>1.6.0</twitter.version>
+
+        <!-- AWS -->
+        <aws.java.sdk.version>1.11.423</aws.java.sdk.version>
+        <aws.kinesis.client.version>1.9.2</aws.kinesis.client.version>
+        <aws.dynamodb.version>4.6.0</aws.dynamodb.version>
+
+        <!-- Test -->
+        <scalacheck.version>1.14.0</scalacheck.version>
+        <scala.test.version>3.2.0-SNAP10</scala.test.version>
+        <!--<junit.version>4.12</junit.version>-->
+        <spark.test.holdenkarau.version>${spark.version}_0.11.0</spark.test.holdenkarau.version>
+        <scalamock.version>4.1.0</scalamock.version>
+
+        <!-- Code Coverage -->
+        <scoverage.plugin.version>1.3.0</scoverage.plugin.version>
+        <maven.scoverage.plugin.version>0.99.10</maven.scoverage.plugin.version>
+        <maven.surefire.plugin.version>3.0.0-M3</maven.surefire.plugin.version>
+        <scalatest.maven.plugin.version>2.0.0</scalatest.maven.plugin.version>
+    </properties>
+
+
+    <dependencies>
+        <!-- Logging - Start -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api-scala -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api-scala_${scala.compat.version}</artifactId>
+            <version>${log4j.scala.version}</version>
+        </dependency>
+
+
+        <!-- https://mvnrepository.com/artifact/com.typesafe.scala-logging/scala-logging-slf4j -->
+        <!--<dependency>-->
+        <!--<groupId>com.typesafe.scala-logging</groupId>-->
+        <!--<artifactId>scala-logging-slf4j_${scala.compat.version}</artifactId>-->
+        <!--<version>${typesafe.slf4j.log.version}</version>-->
+        <!--</dependency>-->
+
+        <!-- Logging - End -->
+
+
+        <!-- Utilities - Start -->
+        <!-- https://mvnrepository.com/artifact/com.typesafe.play/play-json -->
+        <dependency>
+            <groupId>com.typesafe.play</groupId>
+            <artifactId>play-json_${scala.compat.version}</artifactId>
+            <version>${play.json.version}</version>
+        </dependency>
+        <!-- Utilities - End -->
+
+
+        <!-- MySql - Start -->
+        <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql.connector.version}</version>
+        </dependency>
+        <!-- MySql - End -->
+
+        <!-- Scala Libraries - Start -->
+        <!-- Scala lang, spark core and spark sql are all
+                   scoped as provided as spark-submit will provide these -->
+        <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-library</artifactId>
+            <version>${scala.version}</version>
+            <scope>${scope.var}</scope>
+        </dependency>
+
+        <!-- Library to read Config file -->
+        <dependency>
+            <groupId>com.typesafe</groupId>
+            <artifactId>config</artifactId>
+            <version>${typesafe.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.module.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-annotations</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>${jackson.module.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>${jackson.module.version}</version>
+        </dependency>
+
+        <!-- Scala Libraries - End -->
+
+
+        <!-- Hadoop Libraries - Start -->
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-core_${scala.compat.version}</artifactId>
+            <version>${spark.version}</version>
+            <scope>${scope.var}</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-sql_${scala.compat.version}</artifactId>
+            <version>${spark.version}</version>
+            <!--<exclusions>-->
+            <!--<exclusion>-->
+            <!--<artifactId>janino</artifactId>-->
+            <!--<groupId>org.codehaus.janino</groupId>-->
+            <!--</exclusion>-->
+            <!--</exclusions>-->
+            <scope>${scope.var}</scope>
+        </dependency>
+
+
+        <!-- https://mvnrepository.com/artifact/org.apache.spark/spark-hive_2.11/2.3.1 -->
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-hive_${scala.compat.version}</artifactId>
+            <version>${spark.version}</version>
+            <scope>${scope.var}</scope>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.spark-project.hive/hive-exec -->
+        <dependency>
+            <groupId>org.spark-project.hive</groupId>
+            <artifactId>hive-exec</artifactId>
+            <version>${spark.hive.version}</version>
+            <scope>${scope.var}</scope>
+        </dependency>
+
+
+        <!-- https://mvnrepository.com/artifact/org.spark-project.hive/hive-metastore -->
+        <dependency>
+            <groupId>org.spark-project.hive</groupId>
+            <artifactId>hive-metastore</artifactId>
+            <version>${spark.hive.version}</version>
+            <scope>${scope.var}</scope>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.hive/hive-jdbc -->
+        <dependency>
+            <groupId>org.apache.hive</groupId>
+            <artifactId>hive-jdbc</artifactId>
+            <version>${hive.jdbc.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <!-- Hadoop Libraries - End -->
+
+
+        <!-- Spark streaming - Start -->
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-streaming-kinesis-asl_${scala.compat.version}</artifactId>
+            <version>${spark.version}</version>
+            <!--<scope>provided</scope>-->
+        </dependency>
+        <!-- Spark streaming - End -->
+
+
+        <!-- Twitter libraries - Start -->
+        <!-- https://mvnrepository.com/artifact/com.twitter/parquet-hadoop-bundle -->
+        <dependency>
+            <groupId>com.twitter</groupId>
+            <artifactId>parquet-hadoop-bundle</artifactId>
+            <version>${twitter.version}</version>
+            <!--<scope>provided</scope>-->
+        </dependency>
+        <!-- Twitter libraries - End -->
+
+
+        <!-- AWS - Start -->
+        <!-- https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk -->
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk</artifactId>
+            <version>${aws.java.sdk.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-sts</artifactId>
+            <version>${aws.java.sdk.version}</version>
+        </dependency>
+        <!-- AWS - End -->
+
+
+        <!-- AWS - Kinesis - Start -->
+        <!-- https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-kinesis -->
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-kinesis</artifactId>
+            <version>${aws.java.sdk.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>amazon-kinesis-client</artifactId>
+            <version>${aws.kinesis.client.version}</version>
+        </dependency>
+        <!-- AWS - Kinesis - End -->
+
+
+        <!-- AWS - DynamoDB - Start -->
+        <!-- https://mvnrepository.com/artifact/com.amazon.emr/emr-dynamodb-hadoop -->
+        <dependency>
+            <groupId>com.amazon.emr</groupId>
+            <artifactId>emr-dynamodb-hadoop</artifactId>
+            <version>${aws.dynamodb.version}</version>
+        </dependency>
+        <!-- AWS - DynamoDB - End -->
+
+
+        <!-- Utilities - Start -->
+        <dependency>
+            <groupId>org.codehaus.janino</groupId>
+            <artifactId>commons-compiler</artifactId>
+            <version>${utils.codehaus.janino.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/joda-time/joda-time -->
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>${utils.joda.time.version}</version>
+            <scope>${scope.var}</scope>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/commons-codec/commons-codec -->
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>${utils.commons-codec.version}</version>
+            <!--<scope>provided</scope>-->
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.codehaus.jackson/jackson-mapper-asl -->
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>
+            <version>${utils.codehaus.jackson.version}</version>
+            <!--<scope>provided</scope>-->
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/commons-pool/commons-pool -->
+        <dependency>
+            <groupId>commons-pool</groupId>
+            <artifactId>commons-pool</artifactId>
+            <version>${utils.commons.pool.version}</version>
+            <!--<scope>provided</scope>-->
+        </dependency>
+
+        <!-- Utilities - End -->
+
+
+        <!-- Testing - Start -->
+        <!-- If you don't include scalacheck, you might get below error -->
+        <!-- Caused by: java.lang.ClassNotFoundException: org.scalacheck.Test -->
+        <!-- https://mvnrepository.com/artifact/org.scalacheck/scalacheck -->
+        <dependency>
+            <groupId>org.scalacheck</groupId>
+            <artifactId>scalacheck_${scala.compat.version}</artifactId>
+            <version>${scalacheck.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.scalatest/scalatest -->
+        <dependency>
+            <groupId>org.scalatest</groupId>
+            <artifactId>scalatest_${scala.compat.version}</artifactId>
+            <version>${scala.test.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!--https://mvnrepository.com/artifact/com.holdenkarau/spark-testing-base -->
+        <dependency>
+            <groupId>com.holdenkarau</groupId>
+            <artifactId>spark-testing-base_${scala.compat.version}</artifactId>
+            <version>${spark.test.holdenkarau.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.scoverage/scalac-scoverage-plugin -->
+        <dependency>
+            <groupId>org.scoverage</groupId>
+            <artifactId>scalac-scoverage-plugin_${scala.compat.version}</artifactId>
+            <version>${scoverage.plugin.version}</version>
+            <!--<scope>compile</scope>-->
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.scalamock/scalamock -->
+        <dependency>
+            <groupId>org.scalamock</groupId>
+            <artifactId>scalamock_${scala.compat.version}</artifactId>
+            <version>${scalamock.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- Testing - End -->
+    </dependencies>
+
+
+    <build>
+        <sourceDirectory>src/main/scala</sourceDirectory>
+        <testSourceDirectory>src/test/scala</testSourceDirectory>
+
+        <plugins>
+            <plugin>
+                <groupId>net.alchim31.maven</groupId>
+                <artifactId>scala-maven-plugin</artifactId>
+                <version>${scala.maven.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>${maven.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <shadedArtifactAttached>true</shadedArtifactAttached>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                            <artifactSet>
+                                <includes>
+                                    <include>*:*</include>
+                                </includes>
+                            </artifactSet>
+                            <transformers>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                    <resource>reference.conf</resource>
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Code Coverage -->
+            <plugin>
+                <groupId>org.scoverage</groupId>
+                <artifactId>scoverage-maven-plugin</artifactId>
+                <version>${scoverage.plugin.version}</version>
+                <configuration>
+                    <highlighting>true</highlighting>
+                    <scalaVersion>${scala.version}</scalaVersion>
+
+                    <!-- Exclude particular class -->
+                    <excludedPackages>com.puneethabm.config</excludedPackages>
+                    <excludedPackages>com.puneethabm.config.AwsSettings</excludedPackages>
+                    <!--<aggregate>true</aggregate>-->
+
+                    <!-- Set this to 80% -->
+                    <!--<minimumCoverage>80</minimumCoverage>-->
+
+                    <!--<scalacPluginVersion>${scala.version}</scalacPluginVersion>-->
+                    <!--<coverageExcludedFiles>macro</coverageExcludedFiles>-->
+                </configuration>
+
+            </plugin>
+
+
+            <!-- Disable surefire -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven.surefire.plugin.version}</version>
+                <configuration>
+                    <skipTests>true</skipTests>
+                </configuration>
+            </plugin>
+
+            <!-- Enable scalatest -->
+            <plugin>
+                <groupId>org.scalatest</groupId>
+                <artifactId>scalatest-maven-plugin</artifactId>
+                <version>${scalatest.maven.plugin.version}</version>
+                <configuration>
+                    <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
+                    <junitxml>.</junitxml>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>test</id>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+
